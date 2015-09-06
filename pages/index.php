@@ -32,6 +32,7 @@ if(!defined('vendors'))
             </div>
           </div>
           <div class="inner cover">
+            <?php echo $output; ?>
             <h1 class="cover-heading">Vendor Applicaton:</h1>
             <p class="lead">This application is for <b><u>VENDORS</u></b> only.</p>
             <p class="lead">Do you have a product that you wish to sell among our marketplace?
