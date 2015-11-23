@@ -2,17 +2,31 @@
 define('IN_MYBB', 1);
 require "../global.php";
 
+if(isset($_POST['address'])) {
+  $uSale = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", 0, 12));
+  $buyer_uid = get_buyer_userid($_POST['buyer']);
+  send_priv($_POST['buyer'], $_POST['amount'], $_POST['description'], $_POST['buyerinvite'], $_POST['paymentinvite']);
+}
+
+
+function get_buyer_userid($username) {
+  $user = get_user($username); // needs sanitizing
+  return $user['uid'];
+}
+
 function send_priv($buyer, $amount, $description, $buyerinvite, $paymentinvite) {
     global $db, $mybb;
     require_once MYBB_ROOT."inc/datahandlers/pm.php";
 
+
+    $buyer_uid = get_buyer_userid($buyer); // needs sanitizing
     $pmhandler = new PMDataHandler();
     $message = "Hello $buyer,</br></br> $mybb->user['username'] has requested that you pay: $amount for product:</br> $description </br> Please find all the needed information below: </br></br> Buyer Invite: $buyerinvite </br> Payment Invite: $paymentinvite </br>";
     $pm = array(
         "subject" => "New Escrow Request",
         "message" => $message,
         "fromid" => $mybb->user['uid'],
-        "toid" => array($user['uid'])
+        "toid" => array($buyer_uid)//array($user['uid'])
     );
 
     $pm['options'] = array(
@@ -45,11 +59,9 @@ function send_priv($buyer, $amount, $description, $buyerinvite, $paymentinvite) 
 
     <title>Bitcoin Escrow</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <link href="css/bootstrap.css" rel="stylesheet"></link>
     <link href="css/bootstrap-responsive.css" rel="stylesheet"></link>
     <link href="css/bitescrow.css" rel="stylesheet"></link>
-
     <script src="js/array.map.js" type="text/javascript"></script>
     <script src="js/crypto.js" type="text/javascript"></script>
     <script src="js/crypto.hmac.js" type="text/javascript"></script>
@@ -77,11 +89,11 @@ function send_priv($buyer, $amount, $description, $buyerinvite, $paymentinvite) 
         $('#response').html("<b> Loading Response... </b>");
         $.ajax({
           type: 'POST',
-          url: 'testpost.php',
+          url: 'index.php',
           data: $(this).serializeArray(),
           contentType: "application/x-www-form-urlencoded",
           success: function (data) {
-            alert(data)
+            alert('Sale Created.')
           },
           error: function (xhr, ajaxOptions, thrownError) {}
         })
@@ -100,7 +112,6 @@ function send_priv($buyer, $amount, $description, $buyerinvite, $paymentinvite) 
   <body>
     <div class="container">
       <div class="row">&nbsp;</div>
-      <div id='response'></div>
       <div class="row">&nbsp;</div>
         <div class="form-actions">
             <button id="generate-all" type="hidden" class="btn btn-primary" data-loading-text=" ... Generating ... ">Generate Escrow Invitations</button>
@@ -112,9 +123,6 @@ function send_priv($buyer, $amount, $description, $buyerinvite, $paymentinvite) 
           <input class="form-control" type="number" step='any' id="amount" name="amount" placeholder="Amount required." class="span8"/>
           <label for="description">Sales Description:</label>
           <input class="form-control" type="text" id="description" name="description" placeholder="Brief sales description." class="span8"/>
-  
-
-
 
           <label for="address">Address:</label><input class="form-control" type="text" id="address" name="address" placeholder=" ... not yet generated ... " class="span8" /></br>
           <label for="sellerInvite">Seller Invite:</label><input class="form-control" type="text" id="sellerInvite" name="sellerInvite" placeholder=" ... not yet generated ... " class="span8" /></br>
@@ -125,15 +133,8 @@ function send_priv($buyer, $amount, $description, $buyerinvite, $paymentinvite) 
           <input id="submit" name="submit" value="Send" class="btn btn-primary" type="submit">
 
         </form>
+        <div id='response'></div>
       </div>
     </div>
   </body>
 </html>
-<?php
-
-if(isset($_POST['address'])) {
-  die(var_dump($_POST));
-  send_priv($_POST['buyer'], $_POST['amount'], $_POST['description'], $_POST['buyerinvite'], $_POST['paymentinvite']);
-}
-
-?>
