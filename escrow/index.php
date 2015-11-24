@@ -1,6 +1,6 @@
 <?php
-define('IN_MYBB', 1);
-require "../global.php";
+//define('IN_MYBB', 1);
+//require "../global.php";
 
 if(isset($_POST['address'])) {
   $uSale = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", 0, 12));
@@ -25,7 +25,7 @@ function send_priv($buyer, $amount, $description, $buyerinvite, $paymentinvite) 
     $pm = array(
         "subject" => "New Escrow Request",
         "message" => $message,
-        "fromid" => $mybb->user['uid'],
+        "fromid" => $mybb->user['uid'], // could map this as "Escrow" forum account?
         "toid" => array($buyer_uid)//array($user['uid'])
     );
 
@@ -109,32 +109,39 @@ function send_priv($buyer, $amount, $description, $buyerinvite, $paymentinvite) 
     });
     </script>
   </head>
-  <body>
-    <div class="container">
-      <div class="row">&nbsp;</div>
-      <div class="row">&nbsp;</div>
-        <div class="form-actions">
-            <button id="generate-all" type="hidden" class="btn btn-primary" data-loading-text=" ... Generating ... ">Generate Escrow Invitations</button>
-        </div>
-        <form name="genForm" id="genForm" role="form" class="form-horizontal" method="post" action="#">
-          <label for="buyer">Buyer Username:</label>
-          <input class="form-control" type="text" id="buyer" name="buyer" placeholder="Buyer's username." class="span8"/>
-          <label for="amount">Amount required: (btc's)</label>
-          <input class="form-control" type="number" step='any' id="amount" name="amount" placeholder="Amount required." class="span8"/>
-          <label for="description">Sales Description:</label>
-          <input class="form-control" type="text" id="description" name="description" placeholder="Brief sales description." class="span8"/>
+  <body alink="#00ff00" link="#00c000" text="#008000" vlink="#00c000">
+      <div class="container">
+        <center>
+          <b><a href="index.php">[Home]</a>-
+          <a href="">[Forum]</a>-
+          <a href="">[Escrow]</a></b>
+          <table width="668" border="0" cellpadding="3" cellspacing="3" class="main">
+            <tr>
+              <td><img src='http://siph0n.in/index_files/banner4.png' alt='siph0n'></td>
+            </tr>
+            <tr>
+              <td>
+                <form name="genForm" id="genForm" role="form" class="form-horizontal" method="post" action="#">
+                  <label for="buyer">Buyer Forum Username:</label>
+                  <input class="form-control" type="text" id="buyer" name="buyer" placeholder="Buyer's username." class="span8"/>
+                  <label for="amount">Amount required: (btc's)</label>
+                  <input class="form-control" type="number" step='any' id="amount" name="amount" placeholder="Amount required." class="span8"/>
+                  <label for="description">Sales Description:</label>
+                  <input class="form-control" type="text" id="description" name="description" placeholder="Brief sales description." class="span8"/></br></br>
 
-          <label for="address">Address:</label><input class="form-control" type="text" id="address" name="address" placeholder=" ... not yet generated ... " class="span8" /></br>
-          <label for="sellerInvite">Seller Invite:</label><input class="form-control" type="text" id="sellerInvite" name="sellerInvite" placeholder=" ... not yet generated ... " class="span8" /></br>
-          <label for="buyerInvite">Buyer Invite:</label><input class="form-control" type="text" id="buyerInvite" name="buyerInvite" placeholder=" ... not yet generated ... " class="span8" /></br>
-          <label for="paymentInvite">Payment Invite:</label><input class="form-control" type="text" id="paymentInvite" name="paymentInvite" placeholder=" ... not yet generated ... " class="span8" /></br></br>
-          
-
-          <input id="submit" name="submit" value="Send" class="btn btn-primary" type="submit">
-
-        </form>
-        <div id='response'></div>
+                  <input id="submit" name="submit" value="Send" class="btn btn-primary" type="submit"> </br> </br>
+                  <button id="generate-all" type="hidden" class="btn btn-primary" data-loading-text=" ... Generating ... ">Generate Escrow Invitations</button></br>
+                  <!--<label for="address">Address:</label>--><input class="form-control" type="hidden" id="address" name="address" placeholder=" ... not yet generated ... " class="span8" />
+                  <!--<label for="sellerInvite">Seller Invite:</label>--><input class="form-control" type="hidden" id="sellerInvite" name="sellerInvite" placeholder=" ... not yet generated ... " class="span8" />
+                  <!--<label for="buyerInvite">Buyer Invite:</label>--><input class="form-control" type="hidden" id="buyerInvite" name="buyerInvite" placeholder=" ... not yet generated ... " class="span8" />
+                  <!--<label for="paymentInvite">Payment Invite:</label>--><input class="form-control" type="hidden" id="paymentInvite" name="paymentInvite" placeholder=" ... not yet generated ... " class="span8" />
+                </form>
+              </td>
+              <td></td>
+            </tr>
+          </table>
+          <div id='response'></div>
+        </center>
       </div>
-    </div>
   </body>
 </html>
